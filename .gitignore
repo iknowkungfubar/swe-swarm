@@ -72,3 +72,6 @@ state.json
 
 # Model cache
 models/
+
+# Demo output
+demo_output/
