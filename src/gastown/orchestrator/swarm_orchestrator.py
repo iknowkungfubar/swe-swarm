@@ -137,7 +137,7 @@ class SwarmOrchestrator(RWLEngine):
         # Get QA agent
         qa_agents = self.registry.get_agents_by_role("qa")
         if qa_agents:
-            qa = qa_agents[0]
+            _ = qa_agents[0]
             # Simulate QA verification
             await asyncio.sleep(0.2)
 
@@ -155,7 +155,7 @@ class SwarmOrchestrator(RWLEngine):
         # Get SRE agent
         sre_agents = self.registry.get_agents_by_role("sre")
         if sre_agents:
-            sre = sre_agents[0]
+            _ = sre_agents[0]
             # Simulate deployment
             await asyncio.sleep(0.3)
 

@@ -8,7 +8,7 @@ import sys
 
 from loguru import logger
 
-from .agents.mock_agent import MockAgent
+from .agents.role_agent import RoleAgent
 from .agents.utils import load_agent_prompt
 from .orchestrator.swarm_orchestrator import SwarmOrchestrator
 from .runtime.agent_registry import AgentRegistry
@@ -22,7 +22,11 @@ def setup_logging(verbose: bool = False):
     logger.add(
         sys.stderr,
         level="DEBUG" if verbose else "INFO",
-        format="<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
+        format=(
+            "<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | "
+            "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - "
+            "<level>{message}</level>"
+        ),
     )
     logger.add("logs/gastown.log", rotation="10 MB", level="DEBUG")
 
@@ -43,7 +47,7 @@ def create_mock_agents(registry: AgentRegistry):
         prompt = load_agent_prompt(role)
         if not prompt:
             prompt = f"You are a {role.replace('_', ' ').title()} agent."
-        agent = MockAgent(agent_name, role, prompt)
+        agent = RoleAgent(agent_name, role, prompt)
         registry.register(agent)
 
     # Senior Engineers (multiple)
@@ -51,7 +55,7 @@ def create_mock_agents(registry: AgentRegistry):
         prompt = load_agent_prompt("senior_engineer")
         if not prompt:
             prompt = "You are a Senior Software Engineer."
-        engineer = MockAgent(f"engineer-{i}", "senior_engineer", prompt)
+        engineer = RoleAgent(f"engineer-{i}", "senior_engineer", prompt)
         registry.register(engineer)
 
     logger.info(f"Created {len(registry.agents)} mock agents")
@@ -118,7 +122,10 @@ def main():
 
     if not args.goal:
         # Demo goal for testing
-        args.goal = "Build a simple calculator web application with Python Flask backend and React frontend."
+        args.goal = (
+            "Build a simple calculator web application with "
+            "Python Flask backend and React frontend."
+        )
 
     try:
         success = asyncio.run(run_swarm(args.goal, args.verbose))

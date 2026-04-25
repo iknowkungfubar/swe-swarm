@@ -2,14 +2,14 @@
 Ralph Wiggum Loop Engine - The core execution cycle of Gastown Swarm.
 """
 
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from loguru import logger
 from pydantic import BaseModel, Field
 
 
-class LoopPhase(str, Enum):
+class LoopPhase(StrEnum):
     """Phases of the Ralph Wiggum Loop."""
 
     INTERPRET = "interpret"
@@ -69,6 +69,7 @@ class RWLEngine:
                 # Check for completion
                 if next_phase is None:
                     self.state.completed = True
+                    self.state.error_count = 0  # Reset error count on success
                     logger.success("Goal completed successfully!")
                     break
 

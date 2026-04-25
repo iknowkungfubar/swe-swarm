@@ -1,0 +1,45 @@
+# Frontier LLM Configuration
+# For high-capability models (GPT-4, Claude)
+
+model:
+  provider: openai
+  name: gpt-4
+  temperature: 0.7
+  max_tokens: 2000
+  timeout: 30
+
+agents:
+  product_manager:
+    model: gpt-4
+    temperature: 0.5
+  principal_engineer:
+    model: gpt-4
+    temperature: 0.3
+  senior_engineer:
+    model: gpt-4
+    temperature: 0.7
+  qa:
+    model: gpt-4
+    temperature: 0.2
+  sre:
+    model: gpt-4
+    temperature: 0.3
+  ux:
+    model: gpt-4
+    temperature: 0.8
+  security:
+    model: gpt-4
+    temperature: 0.1
+  tpm:
+    model: gpt-4
+    temperature: 0.4
+
+execution:
+  max_iterations: 10
+  timeout_seconds: 300
+  retry_attempts: 3
+
+logging:
+  level: INFO
+  file: logs/gastown.log
+  rotation: 10 MB

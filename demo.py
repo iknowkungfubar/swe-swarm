@@ -25,7 +25,7 @@ async def main():
     orchestrator = DemoOrchestrator(
         goal=goal,
         output_dir=str(demo_dir),
-        max_iterations=5,
+        max_iterations=10,
     )
     
     # Run the swarm

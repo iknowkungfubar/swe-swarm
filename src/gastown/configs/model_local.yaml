@@ -1,0 +1,46 @@
+# Local LLM Configuration
+# For self-hosted models (Llama, Mistral)
+
+model:
+  provider: local
+  name: llama-2-70b
+  api_base: http://localhost:8000/v1
+  temperature: 0.7
+  max_tokens: 1000
+  timeout: 60
+
+agents:
+  product_manager:
+    model: llama-2-70b
+    temperature: 0.5
+  principal_engineer:
+    model: llama-2-70b
+    temperature: 0.3
+  senior_engineer:
+    model: llama-2-70b
+    temperature: 0.7
+  qa:
+    model: llama-2-70b
+    temperature: 0.2
+  sre:
+    model: llama-2-70b
+    temperature: 0.3
+  ux:
+    model: llama-2-70b
+    temperature: 0.8
+  security:
+    model: llama-2-70b
+    temperature: 0.1
+  tpm:
+    model: llama-2-70b
+    temperature: 0.4
+
+execution:
+  max_iterations: 5
+  timeout_seconds: 600
+  retry_attempts: 2
+
+logging:
+  level: DEBUG
+  file: logs/gastown_local.log
+  rotation: 5 MB
