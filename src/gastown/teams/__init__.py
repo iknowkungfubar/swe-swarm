@@ -8,5 +8,6 @@ from .base_team import BaseTeam
 from .writers_room_team import WritersRoomTeam
 from .marketing_team import MarketingTeam
 from .sales_team import SalesTeam
+from .youtube_team import YouTubeTeam
 
-__all__ = ["BaseTeam", "WritersRoomTeam", "MarketingTeam", "SalesTeam"]
+__all__ = ["BaseTeam", "WritersRoomTeam", "MarketingTeam", "SalesTeam", "YouTubeTeam"]
