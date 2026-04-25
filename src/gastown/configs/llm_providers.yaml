@@ -1,0 +1,178 @@
+# LLM Provider Configuration for Gastown Swarm
+# This file configures all available LLM providers and routing rules
+
+providers:
+  # OpenAI and OpenAI-compatible providers
+  openai:
+    enabled: true
+    type: "openai"
+    config:
+      # API key - can also be set via OPENAI_API_KEY environment variable
+      api_key: null
+      # Base URL - default is OpenAI, change for LM Studio or other compatible APIs
+      base_url: "https://api.openai.com/v1"
+      # Default model
+      model: "gpt-4o"
+      # Organization ID (optional)
+      organization: null
+      # Request timeout in seconds
+      timeout: 60.0
+      # Max retries on failure
+      max_retries: 3
+    # Task routing - which tasks should use this provider
+    task_types:
+      - "coding"
+      - "analysis"
+      - "complex_reasoning"
+      - "creative"
+      - "critical"
+
+  # LM Studio (OpenAI-compatible local server)
+  lmstudio:
+    enabled: false  # Set to true if using LM Studio
+    type: "openai"
+    config:
+      base_url: "http://localhost:1234/v1"
+      model: "local-model"  # LM Studio uses "local-model" by default
+      timeout: 120.0
+    task_types:
+      - "local_inference"
+      - "testing"
+
+  # Ollama local inference
+  ollama:
+    enabled: true
+    type: "ollama"
+    config:
+      base_url: "http://localhost:11434"
+      model: "llama3.1"
+      # Context window size
+      num_ctx: 4096
+      # Max tokens to generate
+      num_predict: 2048
+      # Keep model in memory for this duration
+      keep_alive: "5m"
+      # Request timeout
+      request_timeout: 60.0
+      # GPU layers (-1 for auto)
+      gpu_layers: -1
+    task_types:
+      - "simple_qa"
+      - "translation"
+      - "summarization"
+      - "local_inference"
+      - "privacy_sensitive"
+
+  # AMD Lemonade (optimized for AMD GPUs)
+  lemonade:
+    enabled: false  # Set to true if using Lemonade
+    type: "lemonade"
+    config:
+      base_url: "http://localhost:8000"
+      model: "llama-3.1-8b"
+      # Enable AMD GPU optimizations
+      use_amd_optimizations: true
+      # GPU memory fraction to use
+      gpu_memory_fraction: 0.9
+      # Request timeout
+      timeout: 60.0
+    task_types:
+      - "amd_optimized"
+      - "local_inference"
+
+# Routing configuration
+routing:
+  # Default provider when no specific routing matches
+  default_provider: "openai"
+  
+  # Cost optimization settings
+  cost_optimization:
+    enabled: true
+    # Monthly cost budget in USD (null for unlimited)
+    monthly_budget: null
+    # Daily cost limit
+    daily_limit: null
+    # Alert threshold (% of budget)
+    alert_threshold: 80
+  
+  # Latency requirements
+  latency:
+    # Maximum acceptable latency in milliseconds
+    max_latency_ms: 5000
+    # Preferred latency for real-time tasks
+    real_time_threshold_ms: 1000
+  
+  # Fallback behavior
+  fallback:
+    # Enable automatic fallback on provider failure
+    enabled: true
+    # Maximum number of fallback attempts
+    max_attempts: 2
+    # Delay between fallback attempts in seconds
+    retry_delay: 1.0
+
+# Task type definitions and their optimal providers
+task_profiles:
+  # Simple Q&A and basic tasks
+  simple_qa:
+    priority: ["ollama", "lemonade", "openai"]
+    quality_threshold: "medium"
+    max_cost_per_request: 0.001
+  
+  # Code generation and debugging
+  coding:
+    priority: ["openai", "ollama"]
+    quality_threshold: "high"
+    max_cost_per_request: 0.05
+  
+  # Analysis and reasoning
+  analysis:
+    priority: ["openai", "ollama"]
+    quality_threshold: "high"
+    max_cost_per_request: 0.03
+  
+  # Creative writing and brainstorming
+  creative:
+    priority: ["openai", "ollama"]
+    quality_threshold: "medium"
+    max_cost_per_request: 0.02
+  
+  # Summarization
+  summarization:
+    priority: ["ollama", "openai", "lemonade"]
+    quality_threshold: "medium"
+    max_cost_per_request: 0.01
+  
+  # Translation
+  translation:
+    priority: ["ollama", "openai", "lemonade"]
+    quality_threshold: "medium"
+    max_cost_per_request: 0.01
+  
+  # Privacy-sensitive tasks (must use local)
+  privacy_sensitive:
+    priority: ["ollama", "lemonade"]
+    quality_threshold: "medium"
+    max_cost_per_request: 0.0
+  
+  # Production/critical tasks
+  critical:
+    priority: ["openai"]
+    quality_threshold: "maximum"
+    max_cost_per_request: 0.1
+
+# Monitoring and logging
+monitoring:
+  # Log all LLM requests
+  log_requests: true
+  # Log response details
+  log_responses: false
+  # Log token usage
+  log_usage: true
+  # Metrics collection
+  metrics:
+    enabled: true
+    # Export interval in seconds
+    export_interval: 60
+    # Retention period in days
+    retention_days: 30
